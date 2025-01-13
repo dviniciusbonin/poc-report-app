@@ -19,11 +19,19 @@ jobs:
       with:
         node-version: '18'
 
+    - name: Clear yarn cache
+      run: yarn cache clean
     - name: Install dependencies
-      run: yarn install
+      run: |
+        yarn config set network-timeout 300000
+        yarn install --network-timeout 300000 --no-cache
+      env:
+        CI: true
 
     - name: Make Windows installer
       run: yarn make --platform=win32
+      env:
+        CI: true
 
     - name: Upload Windows Installer
       uses: actions/upload-artifact@v3
